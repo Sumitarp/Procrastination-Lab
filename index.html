@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procrastination Lab — Why Am I Not Starting?</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta name="description" content="An interactive reflection tool for understanding why a task feels easy to postpone and what to do next.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+
+    <header class="hero">
+        <div class="eyebrow">THE PROCRASTINATION LAB</div>
+        <h1>Why am I<br><em>not starting?</em></h1>
+        <p>
+            A small diagnostic tool for the moment when you know what matters,
+            but somehow end up doing everything except it.
+        </p>
+        <div class="research-note">
+            Inspired by Tim Urban's <strong>Inside the Mind of a Master Procrastinator</strong>
+            and informed by research on present bias, task aversiveness, and short-term mood regulation.
+        </div>
+    </header>
+
+    <section class="card">
+        <div class="section-head">
+            <span>01</span>
+            <div>
+                <h2>Name the thing</h2>
+                <p>Don't write “work.” Write the specific action you're avoiding.</p>
+            </div>
+        </div>
+
+        <label for="task">What are you putting off?</label>
+        <input id="task" type="text" placeholder="Finish the report introduction">
+
+        <div class="grid two">
+            <div>
+                <label for="minutes">How long would a useful first session take?</label>
+                <input id="minutes" type="number" min="5" max="600" value="25">
+                <small>Not the whole project. Just one meaningful session.</small>
+            </div>
+
+            <div>
+                <label for="deadline">When is it due?</label>
+                <input id="deadline" type="datetime-local">
+                <small>Optional. Open-ended work needs a self-created finish line.</small>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="section-head">
+            <span>02</span>
+            <div>
+                <h2>What's pulling you away?</h2>
+                <p>Procrastination often wins because something else feels better right now.</p>
+            </div>
+        </div>
+
+        <div class="slider-block">
+            <div class="slider-top">
+                <label for="reward">How attractive is the distraction?</label>
+                <strong><span id="rewardValue">7</span>/10</strong>
+            </div>
+            <input id="reward" type="range" min="1" max="10" value="7">
+            <div class="scale"><span>Not tempting</span><span>Very tempting</span></div>
+        </div>
+
+        <div class="slider-block">
+            <div class="slider-top">
+                <label for="aversion">How unpleasant does the task feel?</label>
+                <strong><span id="aversionValue">6</span>/10</strong>
+            </div>
+            <input id="aversion" type="range" min="1" max="10" value="6">
+            <div class="scale"><span>Easy to face</span><span>I really don't want to</span></div>
+        </div>
+
+        <div class="slider-block">
+            <div class="slider-top">
+                <label for="clarity">How clear is the first physical action?</label>
+                <strong><span id="clarityValue">4</span>/10</strong>
+            </div>
+            <input id="clarity" type="range" min="1" max="10" value="4">
+            <div class="scale"><span>Vague</span><span>Crystal clear</span></div>
+        </div>
+    </section>
+
+    <section class="card">
+        <div class="section-head">
+            <span>03</span>
+            <div>
+                <h2>Meet your brain</h2>
+                <p>Four forces usually explain the moment better than “I'm lazy.”</p>
+            </div>
+        </div>
+
+        <div class="brain-grid">
+            <article class="brain-card rational">
+                <span class="brain-icon">R</span>
+                <h3>The Planner</h3>
+                <p>Knows what your future self wants.</p>
+            </article>
+
+            <article class="brain-card reward">
+                <span class="brain-icon">→</span>
+                <h3>The Now</h3>
+                <p>Prefers the easiest reward available immediately.</p>
+            </article>
+
+            <article class="brain-card avoidance">
+                <span class="brain-icon">×</span>
+                <h3>The Avoider</h3>
+                <p>Moves away from boredom, uncertainty, fear, or discomfort.</p>
+            </article>
+
+            <article class="brain-card deadline">
+                <span class="brain-icon">!</span>
+                <h3>The Deadline</h3>
+                <p>Raises the value of action when consequences become close.</p>
+            </article>
+        </div>
+
+        <button id="diagnoseBtn" class="primary">Show me what's happening →</button>
+    </section>
+
+    <section id="result" class="result card hidden">
+        <div class="result-kicker">YOUR PROCRASTINATION MAP</div>
+        <h2 id="resultTitle">You're not avoiding the task. You're avoiding a feeling.</h2>
+        <p id="resultSummary"></p>
+
+        <div class="meter">
+            <div class="meter-label">
+                <span>Pull toward immediate comfort</span>
+                <strong id="pullScore">0</strong>/100
+            </div>
+            <div class="meter-track"><div id="pullFill"></div></div>
+        </div>
+
+        <div class="diagnosis-grid">
+            <div>
+                <span class="mini-label">MAIN FRICTION</span>
+                <strong id="friction"></strong>
+            </div>
+            <div>
+                <span class="mini-label">BEST LEVER</span>
+                <strong id="lever"></strong>
+            </div>
+        </div>
+
+        <div class="action-box">
+            <span class="mini-label">DO THIS NOW</span>
+            <h3 id="actionTitle"></h3>
+            <p id="actionText"></p>
+            <button id="startBtn" class="primary">Start a focused session</button>
+        </div>
+
+        <div id="timer" class="timer hidden">
+            <div class="timer-label">FOCUS SESSION</div>
+            <div id="timerDisplay">25:00</div>
+            <p id="timerStatus">Your only job is to stay with the first action.</p>
+            <div class="timer-actions">
+                <button id="pauseBtn" class="secondary">Pause</button>
+                <button id="finishBtn" class="secondary">Finish session</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="card reflection">
+        <div class="section-head">
+            <span>04</span>
+            <div>
+                <h2>The useful question</h2>
+            </div>
+        </div>
+        <blockquote>
+            “What am I trying not to feel by not starting?”
+        </blockquote>
+        <p>
+            Boredom? Confusion? Fear of doing it badly? The discomfort of not knowing
+            where to begin? Once you identify the friction, you can change the task
+            instead of demanding more willpower.
+        </p>
+    </section>
+
+    <section class="card research">
+        <div class="section-head">
+            <span>05</span>
+            <div>
+                <h2>Why this model works</h2>
+                <p>A compact research layer behind the tool.</p>
+            </div>
+        </div>
+
+        <div class="research-list">
+            <div>
+                <strong>Immediate rewards win.</strong>
+                <p>Temporal motivation research explains why distant rewards can lose against smaller rewards available now.</p>
+            </div>
+            <div>
+                <strong>Task aversion matters.</strong>
+                <p>Research identifies task aversiveness, delay, self-efficacy, impulsiveness, and self-control as important correlates of procrastination.</p>
+            </div>
+            <div>
+                <strong>Delay can repair mood — briefly.</strong>
+                <p>Emotion-regulation research describes procrastination as a way of escaping an unpleasant present feeling, even when the future cost is known.</p>
+            </div>
+        </div>
+
+        <div class="sources">
+            <a href="https://www.ted.com/talks/tim_urban_inside_the_mind_of_a_master_procrastinator" target="_blank" rel="noopener">TED — Tim Urban</a>
+            <a href="https://waitbutwhy.com/2015/03/procrastination-matrix.html" target="_blank" rel="noopener">Wait But Why — Procrastination Matrix</a>
+            <a href="https://eric.ed.gov/?id=EJ751135" target="_blank" rel="noopener">Steel (2007) — Meta-analytic review</a>
+            <a href="https://doi.org/10.1111/spc3.12011" target="_blank" rel="noopener">Sirois &amp; Pychyl (2013)</a>
+            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7667251/" target="_blank" rel="noopener">Academic procrastination overview</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>Built as a reflection tool, not a diagnosis.</p>
+    </footer>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
